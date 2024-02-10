@@ -1,0 +1,14 @@
+# Write your MySQL query statement below
+with first_join as (
+select e.*,d.name as Department from employee e
+ left join department d
+on 
+e.departmentId = d.id
+),
+ranked_data as (
+select fj.*, dense_rank() over(partition by departmentId order by Salary desc) as rnk from first_join fj
+)
+
+select rd.Department, rd.name as Employee,rd.Salary
+from ranked_data rd
+where rnk <=3
